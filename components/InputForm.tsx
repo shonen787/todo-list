@@ -1,5 +1,7 @@
 'use client'
+import { Tasks } from "@/types/types";
 import "@/styles/globals.css"
+import { clearTasks } from "@/lib/funcs";
 import { SetStateAction, useState } from "react";
 
 
@@ -15,14 +17,19 @@ export default function InputForm() {
     }    
     let currentTasks = JSON.parse(localStorage.getItem("currentTasks") || "[]");
     
-    
-    currentTasks.push({task: task,endDate: + date });
+
+    currentTasks.push(
+      {
+        task: task,
+        endDate: date, 
+        status: "incomplete", 
+        taskthing: crypto.randomUUID(),
+    });
+
     localStorage.setItem("currentTasks", JSON.stringify(currentTasks));
     setTask("");
     setDate("");
   };
-
-
 
   const handleTaskInputChange = (event: { target: { value: SetStateAction<string>; }; }) =>{
     setTask(event.target.value);
@@ -34,8 +41,8 @@ export default function InputForm() {
 
 
   return (
-    <div className="flex flex-col items-center justify-between bg-gray-800">
-      <form className="pt-7 grid">
+    <div className="flex flex-col items-center justify-between bg-gray-800 pb-3">
+      <form className="pt-2 grid">
         <label className="text-center pb-1 text-white ">Add a task</label>
         <div className="pb-1 grid">
           <div>
@@ -48,8 +55,10 @@ export default function InputForm() {
           </div>
           
         </div>
-        <button onClick={addTask} type="submit" className="rounded-full bg-blue-500 mt-1">Submit</button>
+        <button onClick={(addTask)} type="submit" className="rounded-full bg-blue-500 mt-1">Submit</button>
+        <button onClick={(clearTasks)}className="rounded-full bg-red-500 mt-1">Clear All Tasks</button>
       </form>
+      
     </div>
   )
 }
